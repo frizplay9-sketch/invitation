@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Приглашение на свидание ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* Все стили остаются без изменений (как в предыдущей версии) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Roboto', sans-serif; background: linear-gradient(145deg, #fce4ec, #f8bbd0); padding: 20px; position: relative; overflow-x: hidden; }
+        .hearts-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .heart { position: absolute; color: rgba(255, 105, 180, 0.25); font-size: 24px; animation: fall linear infinite; user-select: none; }
+        @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.7; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0.1; } }
+        .container { position: relative; z-index: 1; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-radius: 48px; padding: 40px 35px; max-width: 600px; width: 100%; box-shadow: 0 20px 60px rgba(233, 30, 99, 0.25); border: 1px solid rgba(255, 182, 193, 0.5); transition: all 0.3s ease; }
+        .title { text-align: center; font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: #880e4f; margin-bottom: 8px; letter-spacing: 1px; }
+        .title i { color: #e91e63; margin: 0 6px; }
+        .subtitle { text-align: center; color: #ad1457; font-weight: 300; font-size: 1rem; margin-bottom: 30px; border-bottom: 1px solid #f8bbd0; padding-bottom: 15px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 400; color: #6a1b4a; margin-bottom: 6px; font-size: 0.95rem; letter-spacing: 0.3px; }
+        .form-group label i { color: #e91e63; width: 22px; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 16px; border: 2px solid #f8bbd0; border-radius: 30px; font-size: 1rem; font-family: 'Roboto', sans-serif; background: rgba(255, 255, 255, 0.6); transition: 0.3s; color: #3e1a2b; outline: none; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #e91e63; box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.15); background: white; }
+        .form-group textarea { resize: vertical; min-height: 80px; border-radius: 20px; }
+        .btn-submit { width: 100%; padding: 14px; background: linear-gradient(135deg, #e91e63, #c2185b); border: none; border-radius: 40px; color: white; font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(233, 30, 99, 0.3); font-family: 'Playfair Display', serif; margin-top: 8px; }
+        .btn-submit:hover { transform: scale(1.02); box-shadow: 0 12px 28px rgba(233, 30, 99, 0.4); }
+        .btn-submit:active { transform: scale(0.97); }
+        .invitation { display: none; text-align: center; animation: fadeIn 0.8s ease; }
+        @keyframes fadeIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        .invitation .big-heart { font-size: 4rem; color: #e91e63; margin-bottom: 10px; display: block; }
+        .invitation h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: #880e4f; margin-bottom: 12px; }
+        .invitation .details { background: rgba(248, 187, 208, 0.25); padding: 16px 20px; border-radius: 30px; margin: 20px 0; font-size: 1.1rem; line-height: 1.8; color: #4a1a2e; border: 1px solid #f8bbd0; text-align: left; }
+        .invitation .details i { color: #e91e63; width: 28px; text-align: center; }
+        .invitation .question { font-size: 1.4rem; font-weight: 700; color: #ad1457; margin: 25px 0 18px; }
+        .btn-group { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        .btn-yes, .btn-no { padding: 12px 40px; border: none; border-radius: 50px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: 0.25s; min-width: 120px; }
+        .btn-yes { background: linear-gradient(135deg, #e91e63, #c2185b); color: white; box-shadow: 0 6px 18px rgba(233, 30, 99, 0.3); }
+        .btn-yes:hover { transform: scale(1.08); box-shadow: 0 10px 28px rgba(233, 30, 99, 0.45); }
+        .btn-no { background: #ece0e4; color: #6a1b4a; border: 2px solid #f8bbd0; position: relative; }
+        .btn-no:hover { background: #f8bbd0; }
+        .result { display: none; margin-top: 20px; padding: 20px; background: rgba(233, 30, 99, 0.08); border-radius: 40px; border: 2px dashed #e91e63; }
+        .result i { font-size: 3rem; color: #e91e63; }
+        .result p { font-size: 1.3rem; color: #4a1a2e; margin-top: 10px; font-weight: 400; }
+        @media (max-width: 500px) { .container { padding: 25px 20px; } .title { font-size: 1.8rem; } .btn-group { gap: 15px; } .btn-yes, .btn-no { min-width: 100px; padding: 10px 25px; } }
+    </style>
+</head>
+<body>
+
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <div class="container" id="appContainer">
+        <div id="formSection">
+            <div class="title"><i class="fas fa-heart"></i> Приглашение <i class="fas fa-heart"></i></div>
+            <div class="subtitle">Заполни детали, и я жду ответа!</div>
+            <form id="dateForm" autocomplete="off">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Имя девушки</label>
+                    <input type="text" id="girlName" placeholder="Например, Алёна Сисюльки" required />
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Дата</label>
+                    <input type="date" id="datePick" required />
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> Время</label>
+                    <input type="time" id="timePick" required />
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-map-pin"></i> Место</label>
+                    <input type="text" id="placePick" placeholder="Кафе, парк, кино..." required />
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-pen"></i> Пожелание / сообщение</label>
+                    <textarea id="messagePick" placeholder="Напиши что-то романтичное..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit"><i class="fas fa-envelope"></i> Отправить приглашение</button>
+            </form>
+        </div>
+
+        <div id="invitationSection" class="invitation">
+            <span class="big-heart">💖</span>
+            <h2>Ты приглашена на свидание!</h2>
+            <div class="details" id="inviteDetails"></div>
+            <div class="question">Ну что, ты согласна? 😊</div>
+            <div class="btn-group">
+                <button class="btn-yes" id="btnYes"><i class="fas fa-check"></i> Да</button>
+                <button class="btn-no" id="btnNo"><i class="fas fa-times"></i> Нет</button>
+            </div>
+            <div class="result" id="resultBlock">
+                <i class="fas fa-heart"></i>
+                <p>Ура! Я так рад! 💞<br />Жди меня в назначенное время!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключаем EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <script>
+        (function() {
+            // ---------------------------------------------------------------
+            // 1. ИНИЦИАЛИЗАЦИЯ EMAILJS — ВСТАВЬТЕ СВОИ ДАННЫЕ
+            // ---------------------------------------------------------------
+            const YOUR_USER_ID = 'ВyHN46JZJb3v4T-Q5b';          // из раздела API Keys
+            const YOUR_SERVICE_ID = 'service_muvwecs';    // ID созданного сервиса
+            const YOUR_TEMPLATE_ID = 'template_dsbpvun';  // ID шаблона письма
+
+            emailjs.init(YOUR_USER_ID);
+
+            // Остальные переменные
+            const form = document.getElementById('dateForm');
+            const formSection = document.getElementById('formSection');
+            const invitationSection = document.getElementById('invitationSection');
+            const inviteDetails = document.getElementById('inviteDetails');
+            const btnYes = document.getElementById('btnYes');
+            const btnNo = document.getElementById('btnNo');
+            const resultBlock = document.getElementById('resultBlock');
+
+            // Фоновые сердечки (как раньше)
+            const heartsBg = document.getElementById('heartsBg');
+            const heartSymbols = ['♥', '❤', '💕', '💗', '💖'];
+            for (let i = 0; i < 30; i++) {
+                const span = document.createElement('span');
+                span.className = 'heart';
+                span.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                span.style.left = Math.random() * 100 + '%';
+                span.style.fontSize = (14 + Math.random() * 28) + 'px';
+                span.style.animationDuration = (12 + Math.random() * 20) + 's';
+                span.style.animationDelay = (Math.random() * 20) + 's';
+                heartsBg.appendChild(span);
+            }
+
+            // Обработка отправки формы
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Собираем данные
+                const name = document.getElementById('girlName').value.trim() || 'Моя любимая';
+                const date = document.getElementById('datePick').value;
+                const time = document.getElementById('timePick').value;
+                const place = document.getElementById('placePick').value.trim() || 'в нашем любимом месте';
+                const message = document.getElementById('messagePick').value.trim() || 'Ты — моё вдохновение ✨';
+
+                if (!date || !time) {
+                    alert('Пожалуйста, укажи дату и время ❤️');
+                    return;
+                }
+
+                // Форматируем дату
+                const dateObj = new Date(date + 'T00:00:00');
+                const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+                const dateStr = dateObj.toLocaleDateString('ru-RU', options);
+
+                // --- ОТПРАВКА НА ПОЧТУ через EmailJS ---
+                const templateParams = {
+                    name: name,
+                    date: dateStr,
+                    time: time,
+                    place: place,
+                    message: message
+                };
+
+                // Отправляем письмо
+                emailjs.send(YOUR_SERVICE_ID, YOUR_TEMPLATE_ID, templateParams)
+                    .then(function(response) {
+                        console.log('✅ Письмо отправлено!', response.status, response.text);
+                        // После успешной отправки показываем приглашение
+                        showInvitation(name, dateStr, time, place, message);
+                    }, function(error) {
+                        console.error('❌ Ошибка отправки:', error);
+                        alert('Не удалось отправить письмо. Проверьте настройки EmailJS.\nНо приглашение всё равно будет показано.');
+                        // Всё равно показываем приглашение
+                        showInvitation(name, dateStr, time, place, message);
+                    });
+            });
+
+            function showInvitation(name, dateStr, time, place, message) {
+                // Заполняем детали
+                inviteDetails.innerHTML = `
+                    <p><i class="fas fa-user"></i> <strong>${name}</strong></p>
+                    <p><i class="fas fa-calendar-day"></i> ${dateStr}</p>
+                    <p><i class="fas fa-clock"></i> ${time}</p>
+                    <p><i class="fas fa-map-pin"></i> ${place}</p>
+                    <p><i class="fas fa-comment"></i> «${message}»</p>
+                `;
+
+                formSection.style.display = 'none';
+                invitationSection.style.display = 'block';
+                resultBlock.style.display = 'none';
+                btnNo.style.transform = 'translate(0, 0)';
+                btnNo.style.position = 'relative';
+                // Сброс счётчика для кнопки "Нет" (если нужно)
+                noBtnMoves = 0;
+                // Возвращаем кнопке исходный вид (на случай, если она превратилась в "Да")
+                btnNo.innerHTML = '<i class="fas fa-times"></i> Нет';
+                btnNo.style.background = '#ece0e4';
+                btnNo.style.color = '#6a1b4a';
+                btnNo.style.border = '2px solid #f8bbd0';
+                document.querySelector('.btn-group').style.display = 'flex';
+            }
+
+            // --- Убегающая кнопка "Нет" (без изменений) ---
+            let noBtnMoves = 0;
+            const maxMoves = 8;
+
+            btnNo.addEventListener('mouseenter', function() {
+                if (resultBlock.style.display === 'block') return;
+                if (noBtnMoves >= maxMoves) {
+                    this.innerHTML = '<i class="fas fa-heart"></i> Да';
+                    this.style.background = 'linear-gradient(135deg, #e91e63, #c2185b)';
+                    this.style.color = 'white';
+                    this.style.border = 'none';
+                    this.style.transform = 'scale(1.05)';
+                    this.removeEventListener('mouseenter', arguments.callee);
+                    return;
+                }
+                const container = document.getElementById('appContainer');
+                const containerRect = container.getBoundingClientRect();
+                const btnRect = this.getBoundingClientRect();
+                const maxX = containerRect.width - btnRect.width - 20;
+                const maxY = containerRect.height - btnRect.height - 20;
+                let dx = (Math.random() - 0.5) * 120;
+                let dy = (Math.random() - 0.5) * 120;
+                let currentX = 0, currentY = 0;
+                const transform = this.style.transform;
+                if (transform && transform.startsWith('translate(')) {
+                    const parts = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+                    if (parts) {
+                        currentX = parseFloat(parts[1]) || 0;
+                        currentY = parseFloat(parts[2]) || 0;
+                    }
+                }
+                let newX = currentX + dx;
+                let newY = currentY + dy;
+                newX = Math.min(Math.max(newX, -20), maxX);
+                newY = Math.min(Math.max(newY, -20), maxY);
+                this.style.transform = `translate(${newX}px, ${newY}px)`;
+                this.style.position = 'relative';
+                noBtnMoves++;
+                if (noBtnMoves > 3) this.textContent = '💔 Нет?';
+                if (noBtnMoves > 5) this.textContent = '🥺 Ну пожалуйста';
+            });
+
+            btnYes.addEventListener('click', function() {
+                resultBlock.style.display = 'block';
+                document.querySelector('.btn-group').style.display = 'none';
+            });
+
+            btnNo.addEventListener('click', function() {
+                if (this.innerHTML.includes('Да') && !this.innerHTML.includes('Нет')) {
+                    btnYes.click();
+                } else {
+                    if (resultBlock.style.display !== 'block') {
+                        alert('Подумай ещё! 😉 Наведи на кнопку "Нет" ещё раз...');
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
